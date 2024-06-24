@@ -42,4 +42,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    protected $appends = ['onlineStatus'];
+
+    //questions
+    public function question(){
+        return $this->hasMany(Question::class,'user_id','id');
+    }
+
+    //comment
+    public function comment(){
+        return $this->hasMany(QuestionComment::class,'user_id','id');
+    }
+    
 }
