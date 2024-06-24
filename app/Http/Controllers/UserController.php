@@ -41,5 +41,40 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthenticated'], 401);
         }
     }
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
+    }
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8',
+        ]);
+
+        try {
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return response()->json([
+                'message' => 'Utilisateur créé avec succès',
+                'code' => 201,
+                'user' => $user
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erreur lors de la création de l\'utilisateur'], 500);
+        }
+    }
+
+
 
 }

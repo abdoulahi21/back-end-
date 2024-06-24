@@ -18,3 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/login', [App\Http\Controllers\UserController::class, 'login']);
+Route::post('/register', [App\Http\Controllers\UserController::class, 'register']);
+Route::delete('/logout',[\App\Http\Controllers\UserController::class,'logout'])->middleware('auth:api');
