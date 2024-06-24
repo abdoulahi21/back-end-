@@ -23,4 +23,4 @@ Route::apiResource('/questions', QuestionController::class);
 Route::apiResource('/tags', TagController::class);
 Route::post('/login', [App\Http\Controllers\UserController::class, 'login']);
 Route::post('/register', [App\Http\Controllers\UserController::class, 'register']);
-Route::delete('/logout',[\App\Http\Controllers\UserController::class,'logout'])->middleware('auth:api');
+Route::delete('/logout',[\App\Http\Controllers\UserController::class,'logout']);
