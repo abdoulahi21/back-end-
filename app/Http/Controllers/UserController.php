@@ -25,10 +25,9 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('token-name', ['*'], now()->addMinutes(60))->plainTextToken;
+            $token = $user->createToken('token-name')->plainTextToken;
             return response()->json([
                 'token' => $token,
-                'expireAt' => now()->addMinutes(60)->format('Y-m-d H:i:s'),
             ], 200);
         }
 
@@ -36,8 +35,7 @@ class UserController extends Controller
     }
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
-
+        $request->user()->currentAccessToken()->delete();
         return response()->json([
             'message' => 'Successfully logged out'
         ]);

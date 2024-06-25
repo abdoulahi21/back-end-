@@ -21,7 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'confirm_password'
+        'confirm_password',
+        'photo',
+        'role'
     ];
 
     /**
@@ -53,5 +55,5 @@ class User extends Authenticatable
     public function comment(){
         return $this->hasMany(QuestionComment::class,'user_id','id');
     }
-    
+
 }
