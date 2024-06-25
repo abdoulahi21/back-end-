@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -51,32 +55,46 @@ class QuestionController extends Controller
 
     // Créer une nouvelle question
     public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'slug' => 'required|unique:questions,slug',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'is_solved' => 'required|in:true,false'
+{
+    $request->validate([
+        'slug' => 'required|unique:questions,slug',
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        
+    ]);
+
+    try {
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+        if (!$user) {
+            throw new \Exception("Utilisateur non authentifié", 401);
+        }
+
+        // Log l'utilisateur pour debugging
+        Log::info('Utilisateur authentifié:', ['user' => $user]);
+
+        // Créer la question en utilisant les données du formulaire et l'utilisateur connecté
+        $question = Question::create([
+            'user_id' => $user->id,
+            'slug' => $request->input('slug'),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'is_solved' => $request->input('is_solved'),
         ]);
 
-        try {
-            $question = Question::create($request->all());
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Question créée avec succès',
-                'question' => $question
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => $e->getCode(),
-                'message' => "Une erreur s'est produite lors de la création de la question",
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'status' => 200,
+            'message' => 'Question créée avec succès',
+            'question' => $question
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => $e->getCode() ?: 500,
+            'message' => "Une erreur s'est produite lors de la création de la question",
+            'error' => $e->getMessage(),
+        ], 500);
     }
-
+}
     // Affiche les détails d'une question spécifique
     public function show($id)
     {
@@ -105,7 +123,7 @@ class QuestionController extends Controller
             'slug' => 'required|unique:questions,slug,' . $id,
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'is_solved' => 'required|in:true,false'
+          
         ]);
 
         try {

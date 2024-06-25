@@ -56,4 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(QuestionComment::class,'user_id','id');
     }
 
+     // Accessor for online status
+     public function getOnlineStatusAttribute()
+     {
+         // Exemple de logique pour déterminer le statut en ligne
+         return $this->last_activity > now()->subMinutes(5);
+     }
+
 }
