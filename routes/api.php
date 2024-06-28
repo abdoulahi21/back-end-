@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('/questions', QuestionController::class);
 Route::post('/login', [App\Http\Controllers\UserController::class, 'login']);
 Route::get('/users',[UserController::class,'index']);
-Route::apiResource('question-comments', QuestionCommentController::class);
+//Route::apiResource('question-comments', QuestionCommentController::class);
 
 Route::apiResource('/questions', QuestionController::class)->only(['index', 'show']);
 Route::apiResource('/tags', TagController::class)->only(['index', 'show']);
