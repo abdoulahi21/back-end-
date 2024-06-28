@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->get('/user/questions', [App\Http\Controllers\QuestionController::class, 'userQuestions']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('question-comments', QuestionCommentController::class);
+    Route::apiResource('/question-comments', QuestionCommentController::class);
     Route::apiResource('/questions', QuestionController::class)->except(['index', 'show']);
     Route::apiResource('/tags', TagController::class)->except(['index', 'show']);
     Route::delete('/logout', [UserController::class, 'logout']);

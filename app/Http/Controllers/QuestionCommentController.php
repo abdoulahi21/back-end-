@@ -10,24 +10,20 @@ use Illuminate\Support\Facades\Log;
 class QuestionCommentController extends Controller
 {
     // Affiche les commentaires d'une question spécifique
-    public function index($question_id)
-    {
-        try {
-            $comments = QuestionComment::where('question_id', $question_id)->get();
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Liste des commentaires',
-                'comments' => $comments
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => $e->getCode(),
-                'message' => "Une erreur s'est produite lors de la récupération des commentaires",
-                'error' => $e->getMessage(),
-            ], 500);
+        public function index(Request $request)
+    {
+        $questionId = $request->query('question_id');
+
+        if (!$questionId) {
+            return response()->json(['error' => 'Question ID is required'], 400);
         }
+
+        $comments = QuestionComment::where('question_id', $questionId)->with('user')->get();
+
+        return response()->json(['comments' => $comments]);
     }
+
 
     // Créer un nouveau commentaire
     public function store(Request $request)
@@ -60,7 +56,7 @@ class QuestionCommentController extends Controller
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error creating comment:', ['error' => $e->getMessage()]);
-            
+
             return response()->json([
                 'status' => 500,
                 'message' => "Une erreur s'est produite lors de la création du commentaire",
