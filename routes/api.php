@@ -30,9 +30,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('/questions', QuestionController::class)->except(['index', 'show']);
     Route::apiResource('/tags', TagController::class)->except(['index', 'show']);
     Route::delete('/logout', [UserController::class, 'logout']);
 
 });
+Route::apiResource('/questions', QuestionController::class);
 Route::post('/login', [App\Http\Controllers\UserController::class, 'login']);
+Route::get('/users',[UserController::class,'index']);
