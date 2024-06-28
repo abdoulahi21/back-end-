@@ -114,6 +114,7 @@ class QuestionController extends Controller
             ], 404);
         }
     }
+    
 
     // Met à jour une question existante
     public function update(Request $request, $id)

@@ -24,8 +24,6 @@ class TagController extends Controller
             ], 500);
         }
     }
-
-    
     public function store(Request $request)
     {
         $request->validate([
@@ -49,8 +47,6 @@ class TagController extends Controller
             ], 500);
         }
     }
-
-
     public function show($id)
     {
         try {
