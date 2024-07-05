@@ -33,7 +33,6 @@ class TagController extends Controller
 
         try {
             $tag = Tag::create($request->all());
-
             return response()->json([
                 'status' => 200,
                 'message' => 'Tag créé avec succès',
@@ -96,7 +95,6 @@ class TagController extends Controller
         try {
             $tag = Tag::findOrFail($id);
             $tag->delete();
-
             return response()->json([
                 'status' => 200,
                 'message' => 'Tag supprimé avec succès'

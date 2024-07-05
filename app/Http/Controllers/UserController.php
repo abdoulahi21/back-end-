@@ -48,7 +48,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|min:8',
-            'photo'=>'image|mimes:jpeg,png,jpg,gif|max:2048'
+           
         ]);
 
         try {

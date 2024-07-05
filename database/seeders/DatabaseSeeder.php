@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Tag;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,9 +16,21 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-         \App\Models\User::factory()->create([
-             'name' => 'admin',
-             'email' => 'admin@gmail.com',
-         ]);
+       
+         Tag::create([
+            'slug' => Str::slug("Web Development"),
+            'name' => "Web Development",
+        ]);
+
+        Tag::create([
+            'slug' => Str::slug("Javascript"),
+            'name' => "Javascript",
+        ]);
+
+        Tag::create([
+            'slug' => Str::slug("Web Design"),
+            'name' => "Web Design",
+        ]);
+
     }
 }

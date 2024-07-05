@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 
 
 use App\Models\Question;
@@ -53,49 +55,50 @@ class QuestionController extends Controller
         }
     }
 
-    // Créer une nouvelle question
-    public function store(Request $request)
-{
-    $request->validate([
-        'slug' => 'required|unique:questions,slug',
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        
-    ]);
+        // Créer une nouvelle question
+        public function store(Request $request)
+        {
+            $request->validate([
 
-    try {
-        // Récupérer l'utilisateur connecté
-        $user = Auth::user();
-        if (!$user) {
-            throw new \Exception("Utilisateur non authentifié", 401);
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'tags' => 'required',
+
+            ]);
+
+            try {
+                // Récupérer l'utilisateur connecté
+                $user = Auth::user();
+                if (!$user) {
+                    throw new \Exception("Utilisateur non authentifié", 401);
+                }
+
+                // Log l'utilisateur pour debugging
+                Log::info('Utilisateur authentifié:', ['user' => $user]);
+                $title = $request->title;
+                // Créer la question en utilisant les données du formulaire et l'utilisateur connecté
+                $question = Question::create([
+                    'user_id' => $user->id,
+                    'title' => $title,
+                    'description' => $request->input('description'),
+                    'slug' => Str::slug($title) . '-' . uniqid(),
+                    'is_solved' => $request->input('is_solved'),
+                ]);
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Question créée avec succès',
+                    'question' => $question
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => $e->getCode() ?: 500,
+                    'message' => "Une erreur s'est produite lors de la création de la question",
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
         }
-
-        // Log l'utilisateur pour debugging
-        Log::info('Utilisateur authentifié:', ['user' => $user]);
-
-        // Créer la question en utilisant les données du formulaire et l'utilisateur connecté
-        $question = Question::create([
-            'user_id' => $user->id,
-            'slug' => $request->input('slug'),
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'is_solved' => $request->input('is_solved'),
-        ]);
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Question créée avec succès',
-            'question' => $question
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => $e->getCode() ?: 500,
-            'message' => "Une erreur s'est produite lors de la création de la question",
-            'error' => $e->getMessage(),
-        ], 500);
-    }
-}
-    // Affiche les détails d'une question spécifique
+        // Affiche les détails d'une question spécifique
     public function show($id)
     {
         try {
@@ -114,8 +117,6 @@ class QuestionController extends Controller
             ], 404);
         }
     }
-    
-
     // Met à jour une question existante
     public function update(Request $request, $id)
     {
@@ -124,7 +125,7 @@ class QuestionController extends Controller
             'slug' => 'required|unique:questions,slug,' . $id,
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-          
+
         ]);
 
         try {

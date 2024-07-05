@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('question_id');
             $table->unsignedBigInteger('user_id');
             $table->text('comment');
+            $table->boolean('is_validated')->default(false);
             $table->timestamps();
             
             $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');

@@ -12,6 +12,7 @@ class QuestionComment extends Model
         'question_id',
         'user_id',
         'comment',
+        'is_validated',
     ];
 
     protected $appends = ['time'];

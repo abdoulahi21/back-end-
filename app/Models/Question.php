@@ -17,7 +17,6 @@ class Question extends Model
         'slug',
         'title',
         'description',
-        'is_fiexed'
     ];
 
     protected $appends = ['time','viewCount'];
